@@ -1,13 +1,13 @@
+import { useAuthStore } from "@/state/authState";
 import { useCookies } from "react-cookie";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "../state/authState";
 
-const RequireAuth = (Component) => {
+const RequireAuth = (props:{allowedRoles?:string[]}) => {
     const authStore = useAuthStore((state) => state.auth);
     const logoutAuthStore = useAuthStore((state) => state.logout);
-    const { allowedRoles } = Component;
+    const { allowedRoles } = props;
     let roleSesuai = false;
-    const [cookies, removeCookie] = useCookies(['refreshToken']);
+    const [, removeCookie] = useCookies(['refreshToken']);
 
     if (authStore.status !== 200) {
         logoutAuthStore();
@@ -19,7 +19,7 @@ const RequireAuth = (Component) => {
     }
     else {
         allowedRoles.map((role) => {
-            if (role === authStore.data.status) {
+            if (role === authStore.user?.status) {
                 roleSesuai = true;
             }
         });

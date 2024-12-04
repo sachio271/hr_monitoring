@@ -2,34 +2,39 @@ import { PostLoginMutation } from "@/api/auth/login";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import AuthStore from "@/interface/authState/authStore";
+import { FormData } from "@/interface/login/payload";
+import { LoginResponse } from "@/interface/login/response";
 import { useAuthStore } from "@/state/authState";
 import { Label } from "@radix-ui/react-label";
+import { AxiosError } from "axios";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export function Login() {
     const postLogin = PostLoginMutation();
-    const loginAuthStore = useAuthStore((state) => state.login);
+    const loginAuthStore = useAuthStore((state: AuthStore) => state.login);
     const [, setCookie] = useCookies(['refreshToken']);
     const navigate = useNavigate();
-    const { handleSubmit, register } = useForm({
+    const { handleSubmit, register } = useForm<FormData>({
         defaultValues: {
             username: "",
             password: "",
         },
     });
 
-    const handleLogin = (data) => {
-        console.log(data);
+    const handleLogin = (data:FormData) => {
         postLogin.mutate({
             username: data.username,
             password: data.password
         }, {
-            onError: (error) => {
-                console.log("error : " + error.response.data.message);
+            onError: (error:unknown) => {
+                if (error instanceof AxiosError) {
+                    console.log("error : " + error.response?.data.message);
+                }
             },
-            onSuccess: (data) => {
+            onSuccess: (data: LoginResponse) => {
                 loginAuthStore(data);
                 setCookie('refreshToken', data.token, { path: '/' });
                 if (data.data.status == '2') {

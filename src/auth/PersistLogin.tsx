@@ -24,7 +24,7 @@ const PersistLogin = () => {
                 setIsLoading(false);
             }
         }
-        !auth?.token ? verifyToken() : setIsLoading(false);
+        !auth?.status ? verifyToken() : setIsLoading(false);
     }, []);
 
     return <>{IsLoading ? <></> : <Outlet />}</>;

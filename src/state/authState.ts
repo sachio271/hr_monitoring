@@ -1,6 +1,7 @@
+import AuthStore from '@/interface/authState/authStore'
 import { create } from 'zustand'
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
     auth: {
         user: null,
         status: null,
@@ -11,7 +12,7 @@ export const useAuthStore = create((set) => ({
                 id_karyawan: response.data.id_karyawan,
                 nama_karyawan: response.data.nama_karyawan,
                 status: response.data.status,
-                privilages: response.data.privilages,
+                privilages: response.data.privileges,
             },
             status: response.status
         }
