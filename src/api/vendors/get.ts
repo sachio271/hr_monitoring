@@ -1,8 +1,8 @@
+import { GetMcuDataResponse } from "@/interface/mcu/response";
 import { useQuery } from "react-query";
 import { axiosInstance } from "..";
-import { McuResponse } from "@/interface/mcu/response";
 
-const getMcuData = async (token:string, omni:string, penempatan:string, offset:string):Promise<McuResponse> => {
+const getMcuData = async (token:string, omni:string, penempatan:string, offset:string):Promise<GetMcuDataResponse> => {
     const response = await axiosInstance.get("/vendors/schedule/mcu", {
         headers: {
             "auth-token": token

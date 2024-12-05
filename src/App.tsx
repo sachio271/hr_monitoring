@@ -1,9 +1,9 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
-import Login from "./pages/auth/login.js";
 import PersistLogin from "./auth/PersistLogin.js";
-import Index from "./pages/vendor/index.js";
-import { RootUser } from "./pages/root/rootCahaya.js";
 import RequireAuth from "./auth/RequiredAuth.js";
+import Login from "./pages/auth/login.js";
+import { RootUser } from "./pages/root/rootCahaya.js";
+import Index from "./pages/vendor/index.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

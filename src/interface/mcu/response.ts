@@ -1,9 +1,8 @@
-export interface McuApplicant {
+export interface McuAplicant {
     id_applicant: number;
     apply_ke: string;
     nama_lengkap: string;
     no_ktp: string;
-    ktp_file_link: string | null;
     tgl_tes: string;
     waktu_tes: string;
     nama_vendor: string;
@@ -11,21 +10,21 @@ export interface McuApplicant {
     penempatan: string;
     id_karyawan: string;
     recruiter: string;
-    mcu_file_link: string;
+    mcu_file_link: string | null;
+    status_attendance: number;
     status_konfirmasi: string;
     tgl_reschedule: string;
-    note_reschedule: string;
 }
 
-export interface McuPagination {
+export interface Pagination {
     page: number;
     pageSize: number;
     totalData: number;
     totalPages: number;
 }
 
-export interface McuResponse {
+export interface GetMcuDataResponse {
     status: number;
-    data: McuApplicant[];
-    pagination: McuPagination;
+    data: McuAplicant[];
+    pagination: Pagination;
 }

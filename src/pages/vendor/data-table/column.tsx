@@ -1,17 +1,23 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { McuApplicant } from "@/interface/mcu/response"
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ColumnDef } from "@tanstack/react-table"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { McuAplicant } from "@/interface/mcu/response";
+import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 
-export const columns: ColumnDef<McuApplicant>[] = [
+export const columns = (
+  handleCopyPaymentId: (paymentId: string) => void
+): ColumnDef<McuAplicant>[] => [
+    {
+      accessorKey: "id_applicant",
+      header: "Id",
+    },
     {
       accessorKey: "nama_lengkap",
       header: "Nama",
@@ -37,10 +43,39 @@ export const columns: ColumnDef<McuApplicant>[] = [
         header: "Vendor",
     },
     {
+      accessorKey: "status_konfirmasi",
+      header: "Konfirmasi",
+      cell: ({ row }) => {
+        const status = row.original.status_konfirmasi;
+        return (
+          <Badge
+            variant={status === "-1" ? "default" : status === "0" ? "destructive" : "secondary"}
+            className={`capitalize ${status === "-1" ? "bg-gray-500": status === "0" ? "bg-red-600" : "bg-green-600"} text-white`}
+          >
+            {status === "-1" ? "pending" : status === "0" ? "rescheduled" : "accepted"}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "status_attendance",
+      header: "Kehadiran",
+      cell: ({ row }) => {
+        const status = row.original.status_attendance;
+        return (
+          <Badge
+            variant={status === -1 ? "default" : status === 0 ? "destructive" : "secondary"}
+            className={`capitalize ${status === -1 ? "bg-gray-500": status === 0 ? "bg-red-600" : "bg-green-600"} text-white`}
+          >
+            {status === -1 ? "pending" : status === 0 ? "Tidak Hadir" : "Hadir"}
+          </Badge>
+        );
+      },
+    },
+    {
         header: "actions",
         cell: ({ row }) => {
           const rows = row.original
-     
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -52,13 +87,10 @@ export const columns: ColumnDef<McuApplicant>[] = [
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem
-                  
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString())}
                 >
-                  Copy payment ID
+                  Konfirmasi Kehadiran
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>View customer</DropdownMenuItem>
-                <DropdownMenuItem>View payment details</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )
