@@ -91,6 +91,16 @@ export const columns = (
                 >
                   Konfirmasi Kehadiran
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString())}
+                >
+                  Upload Hasil Tes
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString())}
+                >
+                  Upload Invoice
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )
