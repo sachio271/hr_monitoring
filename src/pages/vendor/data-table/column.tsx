@@ -12,7 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 
 export const columns = (
-  handleCopyPaymentId: (paymentId: string) => void
+  handleCopyPaymentId: (paymentId: string, mode: string) => void
 ): ColumnDef<McuAplicant>[] => [
     {
       accessorKey: "id_applicant",
@@ -87,17 +87,17 @@ export const columns = (
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem
-                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString())}
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'konfirm')}
                 >
                   Konfirmasi Kehadiran
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString())}
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'hasil')}
                 >
                   Upload Hasil Tes
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString())}
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'invoice')}
                 >
                   Upload Invoice
                 </DropdownMenuItem>

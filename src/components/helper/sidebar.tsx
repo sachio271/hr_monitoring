@@ -1,9 +1,10 @@
-import { GalleryVerticalEnd } from "lucide-react"
+import { ChevronUp, GalleryVerticalEnd, User2 } from "lucide-react"
 import * as React from "react"
 
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
@@ -13,6 +14,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 
 // This is sample data.
 const data = {
@@ -30,8 +32,10 @@ const data = {
     },
   ],
 }
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  onLogout, // Accept onLogout as a prop
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void }) {
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -77,6 +81,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <User2 /> Cahaya Medika
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem onClick={onLogout}>
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
     </Sidebar>
   )
 }
