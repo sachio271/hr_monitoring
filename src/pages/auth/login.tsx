@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "sonner";
 
 export function Login() {
     const postLogin = PostLoginMutation();
@@ -31,14 +32,23 @@ export function Login() {
         }, {
             onError: (error:unknown) => {
                 if (error instanceof AxiosError) {
-                    console.log("error : " + error.response?.data.message);
+                    toast("Login Gagal", {
+                        description: error.response?.data.msg,
+                        style: {
+                            backgroundColor: "#a70000 ",
+                            color: "#F3F4F6",
+                        }
+                    });
                 }
             },
             onSuccess: (data: LoginResponse) => {
                 loginAuthStore(data);
                 setCookie('refreshToken', data.token, { path: '/' });
-                if (data.data.status == '2') {
+                if (data.data.status == '7') {
                     navigate("/dashboard")
+                }
+                else if (data.data.status == '2') {
+                    navigate("/admin")
                 }
             }
         });
@@ -46,23 +56,24 @@ export function Login() {
 
     return (
         <div className="flex h-screen w-full items-center justify-center px-4">
+            <Toaster />
             <form onSubmit={handleSubmit(handleLogin)}>
                 <Card className="mx-auto max-w-sm">
                     <CardHeader>
                         <CardTitle className="text-2xl">Login</CardTitle>
                         <CardDescription>
-                            Enter your email below to login to your account
+                            Enter your username below to login to your account
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="email">Username</Label>
                                 <Input
                                     {...register("username")}
                                     id="email"
                                     type="text"
-                                    placeholder="m@example.com"
+                                    placeholder="ID12345"
                                     required
                                 />
                             </div>
@@ -74,6 +85,7 @@ export function Login() {
                                     {...register('password')}
                                     id="password"
                                     type="password"
+                                    placeholder="*******"
                                     required />
                             </div>
                             <Button type="submit" className="w-full">

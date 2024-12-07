@@ -2,17 +2,17 @@ import { ChevronUp, GalleryVerticalEnd, User2 } from "lucide-react"
 import * as React from "react"
 
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 
@@ -21,21 +21,43 @@ const data = {
   navMain: [
     {
       title: "Dashboard ",
-      url: "#",
+      url: "/dashboard",
       items: [
         {
             isActive: true,
             title: "Medical Checkup",
+            url: "/dashboard",
+        },
+      ],
+    },
+  ],
+}
+
+const dataAdmin = {
+  navMain: [
+    {
+      title: "Dashboard ",
+      url: "/admin",
+      items: [
+        {
+            isActive: true,
+            title: "Medical Checkup",
+            url: "/admin",
+        },
+        {
+            title: "Psikotes",
             url: "#",
         },
       ],
     },
   ],
 }
+
 export function AppSidebar({
-  onLogout, // Accept onLogout as a prop
+  onLogout, 
+  role,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void }) {
+}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void, role: string }) {
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -58,7 +80,9 @@ export function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {data.navMain.map((item) => (
+            {
+            role === "7" ? 
+            data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
                   <a href={item.url} className="font-medium">
@@ -77,7 +101,29 @@ export function AppSidebar({
                   </SidebarMenuSub>
                 ) : null}
               </SidebarMenuItem>
-            ))}
+            ))
+            :
+            dataAdmin.navMain.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <a href={item.url} className="font-medium">
+                    {item.title}
+                  </a>
+                </SidebarMenuButton>
+                {item.items?.length ? (
+                  <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
+                    {item.items.map((item) => (
+                      <SidebarMenuSubItem key={item.title}>
+                        <SidebarMenuSubButton asChild isActive={item.isActive}>
+                          <a href={item.url}>{item.title}</a>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                ) : null}
+              </SidebarMenuItem>
+            ))
+          }
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
@@ -87,7 +133,7 @@ export function AppSidebar({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <User2 /> Cahaya Medika
+                    <User2 /> Account
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
