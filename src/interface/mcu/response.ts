@@ -12,6 +12,7 @@ export interface McuAplicant {
     recruiter: string;
     mcu_file_link: string | null;
     status_attendance: number;
+    invoice_ref: string;
     status_konfirmasi: string;
     tgl_reschedule: string;
 }

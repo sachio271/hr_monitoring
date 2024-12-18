@@ -15,7 +15,7 @@ const PersistLogin = () => {
             try {
                 const response = await axiosInstance.post("/master/check-token", {}, { headers: { 'auth-token': cookies.refreshToken } });
                 const data = response.status;
-                refresh(data, response.data.data);
+                refresh(data, response.data.user);
             }
             catch (error) {
                 console.log(error);
@@ -24,7 +24,12 @@ const PersistLogin = () => {
                 setIsLoading(false);
             }
         }
-        !auth?.status ? verifyToken() : setIsLoading(false);
+        if (!auth?.status) {
+            verifyToken();
+        } else {
+            console.log("auth.status: " + auth.status);
+            setIsLoading(false);
+        }
     }, []);
 
     return <>{IsLoading ? <></> : <Outlet />}</>;

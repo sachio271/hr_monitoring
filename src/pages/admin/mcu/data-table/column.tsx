@@ -1,18 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { McuAplicant } from "@/interface/mcu/response";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 
 export const columns = (
-  handleCopyPaymentId: (paymentId: string, mode: string) => void
+  handleCopyPaymentId: (paymentId: string, invoice: string) => void
 ): ColumnDef<McuAplicant>[] => [
     {
       accessorKey: "id_applicant",
@@ -43,21 +43,6 @@ export const columns = (
         header: "Vendor",
     },
     {
-      accessorKey: "status_konfirmasi",
-      header: "Konfirmasi",
-      cell: ({ row }) => {
-        const status = row.original.status_konfirmasi;
-        return (
-          <Badge
-            variant={status === "-1" ? "default" : status === "0" ? "destructive" : "secondary"}
-            className={`capitalize ${status === "-1" ? "bg-gray-500": status === "0" ? "bg-red-600" : "bg-green-600"} text-white`}
-          >
-            {status === "-1" ? "pending" : status === "0" ? "rescheduled" : "accepted"}
-          </Badge>
-        );
-      },
-    },
-    {
         accessorKey: "status_attendance",
         header: "Kehadiran",
         cell: ({ row }) => {
@@ -73,16 +58,31 @@ export const columns = (
         },
     },
     {
+        accessorKey: "invoice_ref",
+        header: "invoice",
+        cell: ({ row }) => {
+          const status = row.original.invoice_ref;
+          return (
+            <Badge
+              variant={status === null ? "destructive" : "secondary"}
+              className={`capitalize ${status === null ? "bg-red-600" : "bg-green-600"} text-white`}
+            >
+              {status === null ? "Unavailable" : status}
+            </Badge>
+          );
+        },
+    },
+    {
       accessorKey: "mcu_file_link",
       header: "Hasil Tes",
       cell: ({ row }) => {
         const status = row.original.mcu_file_link;
         return (
           <Badge
-            variant={status === "" ? "default" : "secondary"}
-            className={`capitalize ${status === "" ? "bg-gray-500": "bg-green-600"} text-white`}
+            variant={status === null ? "default" : "secondary"}
+            className={`capitalize ${status === null ? "bg-gray-500": "bg-green-600"} text-white`}
           >
-            {status === "" ? "Belum Tersedia"  : "Tersedia"}
+            {status === null ? "Belum Tersedia"  : "Tersedia"}
           </Badge>
         );
       },
@@ -101,19 +101,17 @@ export const columns = (
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                {rows.mcu_file_link !== "" && (
-                    <DropdownMenuItem
-                    onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'hasil')}
-                    >
+                {rows.mcu_file_link !== null && (
+                    <DropdownMenuItem>
                         <a href={rows.mcu_file_link ?? ""} download target="_blank">
                             Download Hasil Tes
                         </a>
                     </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
-                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'invoice')}
+                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), rows.invoice_ref === null ? '' : rows.invoice_ref.toString())}
                 >
-                  Download Invoice
+                  Set Invoice
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

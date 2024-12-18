@@ -1,11 +1,12 @@
 import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 
 export function ConfirmationDialog(
     {
         title, 
         description,  
         handleConfirm, 
+        handleReject, 
         id,
         isOpen,
         onClose
@@ -14,6 +15,7 @@ export function ConfirmationDialog(
         title:string, 
         description:string,  
         handleConfirm: (paymentId: string) => void, 
+        handleReject: (paymentId: string) => void, 
         id:string,
         isOpen: boolean;
         onClose: () => void;
@@ -28,10 +30,8 @@ export function ConfirmationDialog(
         </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-            <DialogClose onClick={onClose}>
-                Cancel
-            </DialogClose>
-            <Button onClick={() =>  {handleConfirm(id); onClose();}}>Confirm</Button>
+            <Button onClick={() =>  {handleReject(id); onClose();}}>Tidak Hadir</Button>
+            <Button onClick={() =>  {handleConfirm(id); onClose();}}>Hadir</Button>
         </DialogFooter>
     </DialogContent>
     </Dialog>

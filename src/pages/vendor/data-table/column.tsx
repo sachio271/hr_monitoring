@@ -42,21 +42,21 @@ export const columns = (
         accessorKey: "nama_vendor",
         header: "Vendor",
     },
-    {
-      accessorKey: "status_konfirmasi",
-      header: "Konfirmasi",
-      cell: ({ row }) => {
-        const status = row.original.status_konfirmasi;
-        return (
-          <Badge
-            variant={status === "-1" ? "default" : status === "0" ? "destructive" : "secondary"}
-            className={`capitalize ${status === "-1" ? "bg-gray-500": status === "0" ? "bg-red-600" : "bg-green-600"} text-white`}
-          >
-            {status === "-1" ? "pending" : status === "0" ? "rescheduled" : "accepted"}
-          </Badge>
-        );
-      },
-    },
+    // {
+    //   accessorKey: "status_konfirmasi",
+    //   header: "Konfirmasi",
+    //   cell: ({ row }) => {
+    //     const status = row.original.status_konfirmasi;
+    //     return (
+    //       <Badge
+    //         variant={status === "-1" ? "default" : status === "0" ? "destructive" : "secondary"}
+    //         className={`capitalize ${status === "-1" ? "bg-gray-500": status === "0" ? "bg-red-600" : "bg-green-600"} text-white`}
+    //       >
+    //         {status === "-1" ? "pending" : status === "0" ? "rescheduled" : "accepted"}
+    //       </Badge>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "status_attendance",
       header: "Kehadiran",
@@ -64,10 +64,10 @@ export const columns = (
         const status = row.original.status_attendance;
         return (
           <Badge
-            variant={status === -1 ? "default" : status === 0 ? "destructive" : "secondary"}
-            className={`capitalize ${status === -1 ? "bg-gray-500": status === 0 ? "bg-red-600" : "bg-green-600"} text-white`}
+            variant={status === -1 ? "default" : status === 2 ? "destructive" : "secondary"}
+            className={`capitalize ${status === -1 ? "bg-gray-500": status === 2 ? "bg-red-600" : "bg-green-600"} text-white`}
           >
-            {status === -1 ? "pending" : status === 0 ? "Tidak Hadir" : "Hadir"}
+            {status === -1 ? "pending" : status === 2 ? "Tidak Hadir" : "Hadir"}
           </Badge>
         );
       },
@@ -91,16 +91,13 @@ export const columns = (
                 >
                   Konfirmasi Kehadiran
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'hasil')}
-                >
-                  Upload Hasil Tes
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'invoice')}
-                >
-                  Upload Invoice
-                </DropdownMenuItem>
+                {rows.status_attendance === 1 && (
+                  <DropdownMenuItem
+                    onClick={() => handleCopyPaymentId(rows.id_applicant.toString(), 'hasil')}
+                  >
+                    Upload Hasil Tes
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )
