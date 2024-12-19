@@ -10,12 +10,13 @@ import { Label } from "@radix-ui/react-label";
 import { AxiosError } from "axios";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 
 export function Login() {
     const postLogin = PostLoginMutation();
     const loginAuthStore = useAuthStore((state: AuthStore) => state.login);
+    const authStore = useAuthStore((state) => state.auth);
     const [, setCookie] = useCookies(['refreshToken']);
     const navigate = useNavigate();
     const { handleSubmit, register } = useForm<FormData>({
@@ -24,6 +25,15 @@ export function Login() {
             password: "",
         },
     });
+    console.log(authStore.status);
+    if (authStore.status === 200) {
+        if (authStore.user?.status == '7') {
+            return <Navigate to="/dashboard" replace />;
+        }
+        else{
+            return <Navigate to="/admin" replace />;
+        }
+    }
 
     const handleLogin = (data:FormData) => {
         postLogin.mutate({
