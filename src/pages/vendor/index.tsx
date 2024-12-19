@@ -1,7 +1,7 @@
+import { GetMcuData } from "@/api/mcu/get";
+import { UpdateKonfirmasiMutation } from "@/api/mcu/update-status";
+import { UploadHasilMcuMutation } from "@/api/mcu/upload-pdf";
 import { GetPenempatan } from "@/api/penempatan/get";
-import { GetMcuData } from "@/api/vendors/get";
-import { UpdateKonfirmasiMutation } from "@/api/vendors/update-status";
-import { UploadHasilMcuMutation } from "@/api/vendors/upload-pdf";
 import { ConfirmationDialog } from "@/components/helper/confirmationDialog";
 import { ComboboxDemo } from "@/components/helper/penempatanSelect";
 import { UploadPdfDialog } from "@/components/helper/uploadPdf";
@@ -42,7 +42,7 @@ export const Index = () => {
   const fetchData = async () => {
     setLoading(true);
     console.log("fetching data...");
-    await queryClient.invalidateQueries(["vendor-mcu-all", cookies.refreshToken, searchParam, penempatanValue, offset.toString()]);
+    await queryClient.invalidateQueries(["vendor-mcu-all", cookies.refreshToken, debouncedSearchParam, penempatanValue, offset.toString()]);
     setLoading(false);
   };
 

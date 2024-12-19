@@ -1,10 +1,6 @@
-import { CreateAplicantMcuMutation } from "@/api/mcu/create";
-import { GetMcuData } from "@/api/mcu/get";
-import { UpdateInvoiceMutation } from "@/api/mcu/update-invoice";
-import { GetPenempatan } from "@/api/penempatan/get";
-import { CreateMcuAplicant } from "@/components/helper/createMCUAplicant";
-import { ComboboxDemo } from "@/components/helper/penempatanSelect";
-import { UpdateInvoiceDialog } from "@/components/helper/updateInvoiceDialog";
+import { CreateAplicantPsikotesMutation } from "@/api/psikotes/create";
+import { GetPsikotesAll } from "@/api/psikotes/get";
+import { CreatePsikotesAplicant } from "@/components/helper/createPsikotesAplicant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AxiosError } from "axios";
@@ -14,36 +10,28 @@ import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useQueryClient } from "react-query";
 import { toast, Toaster } from "sonner";
+import { DataTable } from "../mcu/data-table/table";
 import { columns } from "./data-table/column";
-import { DataTable } from "./data-table/table";
 
-export const IndexAdminMcu = () => {
+export const IndexAdminPsikotes = () => {
   const [cookies] = useCookies(['refreshToken']);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
-  const [penempatanValue, setPenempatanValue] = useState("");
   const [searchParam, setSearchParam] = useState('');
   const [offset, setOffset] = useState(0);
-  const [isOpened, setIsOpened] = useState(false);
-  const [invoice, setInvoice] = useState('');
   const [debouncedSearchParam, setDebouncedSearchParam] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const acc = UpdateInvoiceMutation();
-  const create = CreateAplicantMcuMutation();
+  const create = CreateAplicantPsikotesMutation();
 
-  // Use the GetMcuData function to fetch data
-  const { data, isLoading } = GetMcuData(cookies.refreshToken, debouncedSearchParam, penempatanValue, offset.toString());
-  const { data: penempatanData, isLoading: isLoadingPenempatan } = GetPenempatan(cookies.refreshToken);
-
+  const { data, isLoading } = GetPsikotesAll(cookies.refreshToken, debouncedSearchParam, '', offset.toString());
   const totalPages = data?.pagination.totalPages ?? 0;
 
   const fetchData = async () => {
     setLoading(true);
     console.log("fetching data...");
-    await queryClient.invalidateQueries(["vendor-mcu-all", cookies.refreshToken, debouncedSearchParam, penempatanValue, offset.toString()]);
+    await queryClient.invalidateQueries(["vendor-psikotes-all", cookies.refreshToken, debouncedSearchParam, '', offset.toString()]);
     setLoading(false);
   };
 
@@ -81,27 +69,13 @@ export const IndexAdminMcu = () => {
     }
   };
 
-  const handleActionClick = (id: string, invoice: string) => {
-    console.log("Action clicked with ID:", id);
-    console.log("Invoice clicked with ID:", invoice);
-    setSelectedId(id);
-    if(invoice !== null){
-      setInvoice(invoice);
-    }
-    setIsOpened(true);
-  };
-
-  const handleCancel = () => {
-    setIsOpened(false);
-  };
-
   const handleCreateCancel = () => {
     setIsCreateOpen(false);
   }
 
-  const handleCreate = (ktp: string, nama: string, tanggal: string, waktu: string, vendor: string, penempatan: string) => {
+  const handleCreate = (ktp: string, nama: string, tanggal: string, waktu: string, vendor: string, tujuan: string, leveling: string) => {
     try {
-      create.mutate([cookies.refreshToken, ktp, nama, tanggal, waktu, vendor, penempatan], {
+      create.mutate([cookies.refreshToken, ktp, nama, tanggal, waktu, vendor, leveling, tujuan], {
         onError: (error:unknown) => {
           if (error instanceof AxiosError) {
             console.log("error : " + error.response?.data.message);
@@ -115,41 +89,9 @@ export const IndexAdminMcu = () => {
           }
         },
           onSuccess: async () => {
-              await queryClient.invalidateQueries(["vendor-mcu-all"]);
+              await queryClient.invalidateQueries(["vendor-psikotes-all"]);
               toast("Aplicant Diterima!", {
                 description: "Data Aplicant berhasil disimpan",
-                style: {
-                  backgroundColor: "#10B981",
-                  color: "#F3F4F6",
-                },
-              });
-          }
-      });
-    } catch (error) {
-        console.log('error : ' + error);
-    }
-  }
-
-  const handleConfirm = (id:string, invoice:string) =>{
-    console.log("Confirm clicked with ID:", id);
-    try {
-      acc.mutate([cookies.refreshToken, selectedId, '1', invoice], {
-        onError: (error:unknown) => {
-          if (error instanceof AxiosError) {
-            console.log("error : " + error.response?.data.message);
-            toast("Konfirmasi Gagal", {
-              description: error.response?.data.message,
-              style: {
-                backgroundColor: "#a70000 ",
-                color: "#F3F4F6",
-              },
-            });
-          }
-        },
-          onSuccess: async () => {
-              await queryClient.invalidateQueries(["vendor-mcu-all"]);
-              toast("Konfirmasi Diterima!", {
-                description: "Nomor Invoice berhasil diupdate",
                 style: {
                   backgroundColor: "#10B981",
                   color: "#F3F4F6",
@@ -165,11 +107,10 @@ export const IndexAdminMcu = () => {
   return (
     <div>
       <Toaster />
-      <CreateMcuAplicant isOpen={isCreateOpen} onClose={handleCreateCancel} handleConfirm={handleCreate}/>
-      <UpdateInvoiceDialog title="Invoice" description="Update Invoice" id={selectedId} isOpen={isOpened} onClose={handleCancel} handleConfirm={handleConfirm} inv={invoice}/>
+      <CreatePsikotesAplicant isOpen={isCreateOpen} onClose={handleCreateCancel} handleConfirm={handleCreate}/>
       <div className="container mx-auto py-10">
         <div className="flex justify-between my-3">
-          <h1 className="text-2xl font-bold">Aplicant Medical Checkup</h1>
+          <h1 className="text-2xl font-bold">Aplicant Psikotes</h1>
           <Button onClick={() => {setIsCreateOpen(true)}}>Tambah Aplicant</Button>
         </div>
         <div className="flex justify-between my-3">
@@ -180,26 +121,13 @@ export const IndexAdminMcu = () => {
             className="w-1/3"
             onChange={handleSearchChange} 
           />
-          {isLoadingPenempatan ? (
-            <div className="flex justify-center items-center w-full min-h-screen">
-              <Loader2 className="animate-spin"/>
-            </div>
-          ) : (
-            <>
-              <ComboboxDemo
-                data={penempatanData?.data ?? []}
-                value={penempatanValue}
-                setValue={setPenempatanValue}
-              />
-            </>
-          )}
         </div>
         {isLoading || loading ? (
           <div className="flex justify-center items-center w-full min-h-screen">
             <Loader2 className="animate-spin"/>
           </div>
         ) : (
-          <DataTable columns={columns(handleActionClick)} data={data?.data ?? []} />
+          <DataTable columns={columns()} data={data?.data ?? []} />
         )}
         <div className="flex items-center justify-between py-2 mt-3">
           <div>
@@ -229,4 +157,4 @@ export const IndexAdminMcu = () => {
   );
 };
 
-export default IndexAdminMcu;
+export default IndexAdminPsikotes;

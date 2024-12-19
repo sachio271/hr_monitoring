@@ -1,5 +1,6 @@
-import { ChevronUp, GalleryVerticalEnd, User2 } from "lucide-react"
-import * as React from "react"
+import { ChevronUp, GalleryVerticalEnd, User2 } from "lucide-react";
+import * as React from "react";
+import { useLocation } from "react-router-dom"; // For React Router
 
 import {
   Sidebar,
@@ -13,10 +14,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
+} from "@/components/ui/sidebar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
-// This is sample data.
+// Sample data
 const data = {
   navMain: [
     {
@@ -24,14 +25,13 @@ const data = {
       url: "/dashboard",
       items: [
         {
-            isActive: true,
-            title: "Medical Checkup",
-            url: "/dashboard",
+          title: "Medical Checkup",
+          url: "/dashboard",
         },
       ],
     },
   ],
-}
+};
 
 const dataAdmin = {
   navMain: [
@@ -40,24 +40,28 @@ const dataAdmin = {
       url: "/admin",
       items: [
         {
-            isActive: true,
-            title: "Medical Checkup",
-            url: "/admin",
+          title: "Medical Checkup",
+          url: "/admin",
         },
         {
-            title: "Psikotes",
-            url: "#",
+          title: "Psikotes",
+          url: "/admin/psikotes",
         },
       ],
     },
   ],
-}
+};
 
 export function AppSidebar({
-  onLogout, 
+  onLogout,
   role,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void, role: string }) {
+}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void; role: string }) {
+  const location = useLocation(); // Get current route
+
+  // Helper function to check if a URL matches the current route
+  const isActive = (url: string) => location.pathname === url;
+
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -80,75 +84,69 @@ export function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {
-            role === "7" ? 
-            data.navMain.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url} className="font-medium">
-                    {item.title}
-                  </a>
-                </SidebarMenuButton>
-                {item.items?.length ? (
-                  <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                    {item.items.map((item) => (
-                      <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                ) : null}
-              </SidebarMenuItem>
-            ))
-            :
-            dataAdmin.navMain.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url} className="font-medium">
-                    {item.title}
-                  </a>
-                </SidebarMenuButton>
-                {item.items?.length ? (
-                  <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                    {item.items.map((item) => (
-                      <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                ) : null}
-              </SidebarMenuItem>
-            ))
-          }
+            {role === "7"
+              ? data.navMain.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <a href={item.url} className="font-medium">
+                        {item.title}
+                      </a>
+                    </SidebarMenuButton>
+                    {item.items?.length ? (
+                      <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
+                        {item.items.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild isActive={isActive(subItem.url)}>
+                              <a href={subItem.url}>{subItem.title}</a>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    ) : null}
+                  </SidebarMenuItem>
+                ))
+              : dataAdmin.navMain.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <a href={item.url} className="font-medium">
+                        {item.title}
+                      </a>
+                    </SidebarMenuButton>
+                    {item.items?.length ? (
+                      <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
+                        {item.items.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild isActive={isActive(subItem.url)}>
+                              <a href={subItem.url}>{subItem.title}</a>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    ) : null}
+                  </SidebarMenuItem>
+                ))}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <User2 /> Account
-                    <ChevronUp className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem onClick={onLogout}>
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 /> Account
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuItem onClick={onLogout}>
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

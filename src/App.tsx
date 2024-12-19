@@ -5,6 +5,7 @@ import IndexAdminMcu from "./pages/admin/mcu/index.js";
 import Login from "./pages/auth/login.js";
 import { RootUser } from "./pages/root/rootCahaya.js";
 import Index from "./pages/vendor/index.js";
+import IndexAdminPsikotes from "./pages/admin/psikotes/index.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
           <Route element={<RootUser />}>
             <Route path="/admin" >
               <Route index element={ <IndexAdminMcu/>}/>
+              <Route path="psikotes" element={ <IndexAdminPsikotes/>}/>
             </Route>
           </Route>
         </Route>
