@@ -28,7 +28,11 @@ const RequireAuth = (props: { allowedRoles?: string[] }) => {
     if (!allowedRoles) {
         roleSesuai = true;
     } else {
-        roleSesuai = allowedRoles.includes(authStore.user?.status || "");
+        allowedRoles.map((role) => {
+            if (role === authStore.user?.status) {
+                roleSesuai = true;
+            }
+        });
     }
 
     if (!roleSesuai) {
