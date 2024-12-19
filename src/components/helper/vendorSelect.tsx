@@ -22,7 +22,7 @@ export function VendorSelect({ data, value, setValue }: ComboboxDemoProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className="col-span-3 justify-between"
                 >
                     {value
                         ? data.find((vendor) => vendor.id_vendor === value)?.nama_vendor

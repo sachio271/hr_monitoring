@@ -73,9 +73,9 @@ export const IndexAdminPsikotes = () => {
     setIsCreateOpen(false);
   }
 
-  const handleCreate = (ktp: string, nama: string, tanggal: string, waktu: string, vendor: string, tujuan: string, leveling: string) => {
+  const handleCreate = (ktp: string, nama: string, tanggal: string, waktu: string, vendor: string, tujuan: string, leveling: string, posisi: string) => {
     try {
-      create.mutate([cookies.refreshToken, ktp, nama, tanggal, waktu, vendor, leveling, tujuan], {
+      create.mutate([cookies.refreshToken, ktp, nama, tanggal, waktu, vendor, leveling, tujuan, posisi], {
         onError: (error:unknown) => {
           if (error instanceof AxiosError) {
             console.log("error : " + error.response?.data.message);
